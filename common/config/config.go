@@ -31,7 +31,8 @@ var (
 	// Feature flags
 	DebugEnabled     = false
 	DemoMode         = false
-	MemoryCacheEnabled = false
+	// Enabled by default for personal use — avoids repeated DB hits on a low-resource VPS
+	MemoryCacheEnabled = true
 
 	// Rate limiting
 	// Increased from 60 to 120 to better suit personal/self-hosted use
@@ -106,7 +107,10 @@ func loadFromEnv() {
 		DemoMode = true
 	}
 
-	if cache := os.Getenv("MEMORY_CACHE_ENABLED"); cache == "true" || cache == "1" {
+	// Allow explicitly disabling memory cache via env even though it defaults to true
+	if cache := os.Getenv("MEMORY_CACHE_ENABLED"); cache == "false" || cache == "0" {
+		MemoryCacheEnabled = false
+	} else if cache == "true" || cache == "1" {
 		MemoryCacheEnabled = true
 	}
 
