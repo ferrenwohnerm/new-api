@@ -34,7 +34,8 @@ var (
 	MemoryCacheEnabled = false
 
 	// Rate limiting
-	GlobalApiRateLimitNum      = 60
+	// Increased from 60 to 120 to better suit personal/self-hosted use
+	GlobalApiRateLimitNum      = 120
 	GlobalApiRateLimitDuration = int64(3 * 60)
 
 	// Model & channel defaults
