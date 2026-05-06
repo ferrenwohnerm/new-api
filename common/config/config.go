@@ -37,7 +37,8 @@ var (
 	// Rate limiting
 	// Increased from 60 to 120 to better suit personal/self-hosted use
 	GlobalApiRateLimitNum      = 120
-	GlobalApiRateLimitDuration = int64(3 * 60)
+	// Shortened window from 3 min to 1 min so rate limits reset faster during local testing
+	GlobalApiRateLimitDuration = int64(1 * 60)
 
 	// Model & channel defaults
 	DefaultChannelModels    = map[int][]string{}
@@ -117,6 +118,12 @@ func loadFromEnv() {
 	if rateLimit := os.Getenv("GLOBAL_API_RATE_LIMIT"); rateLimit != "" {
 		if n, err := strconv.Atoi(rateLimit); err == nil {
 			GlobalApiRateLimitNum = n
+		}
+	}
+
+	if rateDuration := os.Getenv("GLOBAL_API_RATE_LIMIT_DURATION"); rateDuration != "" {
+		if d, err := strconv.ParseInt(rateDuration, 10, 64); err == nil {
+			GlobalApiRateLimitDuration = d
 		}
 	}
 }
