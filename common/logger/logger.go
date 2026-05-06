@@ -36,9 +36,9 @@ func Init(logDir string, logLevel string) {
 
 		rotatingLog := &lumberjack.Logger{
 			Filename:   filepath.Join(logDir, "new-api.log"),
-			MaxSize:    100, // megabytes
-			MaxBackups: 7,
-			MaxAge:     30, // days
+			MaxSize:    50, // megabytes - reduced from 100 to keep disk usage lower
+			MaxBackups: 5,  // keep fewer backups since this is a personal instance
+			MaxAge:     14, // days - 2 weeks is enough for personal use
 			Compress:   true,
 		}
 
