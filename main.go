@@ -71,8 +71,10 @@ func main() {
 	server.Use(gin.Recovery())
 	server.Use(middleware.RequestId())
 	server.Use(middleware.CORS())
-	// Log all requests in my local environment for easier debugging
-	server.Use(gin.Logger())
+	// Only log requests in debug mode — too noisy in release for my local setup
+	if config.DebugEnabled {
+		server.Use(gin.Logger())
+	}
 
 	// Register all routes
 	router.SetRouter(server)
