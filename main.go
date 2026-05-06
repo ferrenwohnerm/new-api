@@ -43,8 +43,8 @@ func main() {
 	// Initialize Redis if configured
 	if config.RedisEnabled {
 		if err := common.InitRedisClient(); err != nil {
-			// Treat Redis failure as fatal since we rely on it for rate limiting and caching
-			logger.FatalLog(fmt.Sprintf("Failed to initialize Redis: %v", err))
+			// Redis failure is non-fatal in my personal setup; log a warning and continue
+			logger.SysError(fmt.Sprintf("Failed to initialize Redis (continuing without it): %v", err))
 		}
 	}
 
