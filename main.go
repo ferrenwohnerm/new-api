@@ -60,6 +60,7 @@ func main() {
 	go controller.AutomaticEnableChannel()
 
 	// Setup Gin engine
+	// Note: keeping debug mode on locally so I can see route registration in logs
 	if config.DebugEnabled {
 		gin.SetMode(gin.DebugMode)
 	} else {
@@ -70,6 +71,8 @@ func main() {
 	server.Use(gin.Recovery())
 	server.Use(middleware.RequestId())
 	server.Use(middleware.CORS())
+	// Log all requests in my local environment for easier debugging
+	server.Use(gin.Logger())
 
 	// Register all routes
 	router.SetRouter(server)
