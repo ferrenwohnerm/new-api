@@ -47,6 +47,12 @@ var (
 	// System info
 	Version = "v0.0.1"
 	StartTime int64
+
+	// RequestTimeout is the maximum number of seconds to wait for an upstream
+	// model response before giving up. Lowered from the upstream default (300s)
+	// to 120s — long enough for most completions on my self-hosted instance while
+	// avoiding hung goroutines when a provider goes silent.
+	RequestTimeout = 120
 )
 
 // InitConfig loads configuration from environment variables.
@@ -124,6 +130,12 @@ func loadFromEnv() {
 	if rateDuration := os.Getenv("GLOBAL_API_RATE_LIMIT_DURATION"); rateDuration != "" {
 		if d, err := strconv.ParseInt(rateDuration, 10, 64); err == nil {
 			GlobalApiRateLimitDuration = d
+		}
+	}
+
+	if timeout := os.Getenv("REQUEST_TIMEOUT"); timeout != "" {
+		if t, err := strconv.Atoi(timeout); err == nil {
+			RequestTimeout = t
 		}
 	}
 }
