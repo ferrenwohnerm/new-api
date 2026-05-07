@@ -80,8 +80,10 @@ func main() {
 	router.SetRouter(server)
 
 	// Determine listen address
+	// Defaulting to 0.0.0.0 binding; use PORT env var to override (e.g. PORT=3001 for local dev)
 	addr := fmt.Sprintf(":%d", config.Port)
 	logger.SysLog(fmt.Sprintf("Server listening on %s", addr))
+	logger.SysLog(fmt.Sprintf("Debug mode: %v", config.DebugEnabled))
 
 	if err := server.Run(addr); err != nil {
 		logger.FatalLog(fmt.Sprintf("Failed to start server: %v", err))
