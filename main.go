@@ -85,6 +85,9 @@ func main() {
 	logger.SysLog(fmt.Sprintf("Server listening on %s", addr))
 	logger.SysLog(fmt.Sprintf("Debug mode: %v", config.DebugEnabled))
 
+	// Log the process ID so I can easily find and kill the server during local dev
+	logger.SysLog(fmt.Sprintf("PID: %d", os.Getpid()))
+
 	if err := server.Run(addr); err != nil {
 		logger.FatalLog(fmt.Sprintf("Failed to start server: %v", err))
 	}
