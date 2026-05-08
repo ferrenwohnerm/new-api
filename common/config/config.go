@@ -53,6 +53,12 @@ var (
 	// to 120s — long enough for most completions on my self-hosted instance while
 	// avoiding hung goroutines when a provider goes silent.
 	RequestTimeout = 120
+
+	// LogRequestBody controls whether incoming request bodies are logged for
+	// debugging. Keeping this false by default to avoid leaking prompts/keys
+	// into log files on my VPS. Set LOG_REQUEST_BODY=true to enable temporarily
+	// when troubleshooting a misbehaving channel.
+	LogRequestBody = false
 )
 
 // InitConfig loads configuration from environment variables.
@@ -121,21 +127,13 @@ func loadFromEnv() {
 		MemoryCacheEnabled = true
 	}
 
+	if logBody := os.Getenv("LOG_REQUEST_BODY"); logBody == "true" || logBody == "1" {
+		LogRequestBody = true
+	}
+
 	if rateLimit := os.Getenv("GLOBAL_API_RATE_LIMIT"); rateLimit != "" {
 		if n, err := strconv.Atoi(rateLimit); err == nil {
 			GlobalApiRateLimitNum = n
-		}
-	}
-
-	if rateDuration := os.Getenv("GLOBAL_API_RATE_LIMIT_DURATION"); rateDuration != "" {
-		if d, err := strconv.ParseInt(rateDuration, 10, 64); err == nil {
-			GlobalApiRateLimitDuration = d
-		}
-	}
-
-	if timeout := os.Getenv("REQUEST_TIMEOUT"); timeout != "" {
-		if t, err := strconv.Atoi(timeout); err == nil {
-			RequestTimeout = t
 		}
 	}
 }
